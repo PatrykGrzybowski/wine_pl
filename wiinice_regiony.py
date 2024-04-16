@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov 10 13:10:45 2023
-
-@author: patryk
+@author: patrykgrzybowski
 """
 import geopandas as gpd
 import libpysal as ps
@@ -31,10 +29,9 @@ def classify_moran_i(value, threshold):
     else:
         return 'LL'
 
-# Define a custom threshold for HIGH values
+# Define a threshold for HIGH values (2 is based on general knowledge on the topic)
 hh_threshold = 2
 
-# Create a new column in the GeoDataFrame with the classification
 gminy['Moran_Class'] = [classify_moran_i(i, hh_threshold) for i in local_moran_i]
 
 # Update classification for LH and HL based on Moran's I values
@@ -44,7 +41,7 @@ for i in range(len(gminy)):
     elif local_moran_i[i] < 0 and gminy['Moran_Class'][i] == 'LL':
         gminy['Moran_Class'][i] = 'HL'
 
-# Create a choropleth map of the classification
+# Create a map of the classification
 fig, ax = plt.subplots(figsize=(8, 8))
 gminy.plot(column='Moran_Class', cmap='coolwarm', ax=ax, legend=True)
 ax.set_title('Local Moran\'s I Classification (Threshold = {})'.format(hh_threshold))
